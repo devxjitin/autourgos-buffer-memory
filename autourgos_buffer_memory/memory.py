@@ -6,7 +6,7 @@ import sys
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
 
-from autourgos_memory import BaseMemory, MemoryMessage
+from .base import BaseMemory, MemoryMessage
 
 
 class RuntimeShortTermMemory(BaseMemory):
