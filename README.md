@@ -14,6 +14,10 @@ pip install autourgos-buffer-memory
 
 ---
 
+## Quick Start
+
+`my_llm` below is any chat-model instance, e.g. `OpenAIChatModel` from `autourgos-openaichat` (`pip install autourgos-openaichat`, needs `OPENAI_API_KEY` set).
+
 ## Classes
 
 ### RuntimeShortTermMemory
@@ -23,7 +27,9 @@ Keeps the last N messages in RAM. Oldest messages are dropped when the cap is ex
 ```python
 from autourgos_buffer_memory import RuntimeShortTermMemory
 from autourgos_react_agent import ReactAgent
+from autourgos_openaichat import OpenAIChatModel
 
+my_llm = OpenAIChatModel(model="gpt-4o-mini")
 memory = RuntimeShortTermMemory(max_messages=20)
 agent  = ReactAgent(llm=my_llm, memory=memory)
 
@@ -40,7 +46,7 @@ Same as `RuntimeShortTermMemory` but with no truncation — keeps every message 
 from autourgos_buffer_memory import ConversationBufferMemory
 
 memory = ConversationBufferMemory()
-agent  = ReactAgent(llm=my_llm, memory=memory)
+agent  = ReactAgent(llm=my_llm, memory=memory)  # my_llm as shown in Quick Start above
 ```
 
 > For long conversations, use `autourgos-summary-memory` or `autourgos-token-memory` to stay within context window limits.
