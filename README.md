@@ -1,8 +1,48 @@
 # autourgos-buffer-memory
 
-In-memory short-term buffer for [Autourgos](https://github.com/devxjitin) agents.
+[![Framework: Autourgos](https://img.shields.io/badge/Framework-Autourgos-orange.svg)](https://github.com/devxjitin)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://pypi.org/project/autourgos-buffer-memory/)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green.svg)](https://github.com/devxjitin/autourgos-buffer-memory/blob/main/LICENSE)
+[![Author](https://img.shields.io/badge/Author-Jitin%20Kumar%20Sengar-blue.svg)](https://github.com/devxjitin)
+[![Contributor](https://img.shields.io/badge/Contributor-Sonia-blueviolet.svg)]()
+[![Contributor](https://img.shields.io/badge/Contributor-Vishwanil%20Suman-blueviolet.svg)]()
 
-Two classes — a message-count bounded ring buffer and an unbounded conversation buffer. Fast, zero I/O, ideal for single-session use.
+In-memory short-term buffer for [Autourgos](https://github.com/devxjitin) agents. Two classes — a
+message-count bounded ring buffer and an unbounded conversation buffer. Fast, zero I/O, ideal for
+single-session use.
+
+```python
+from autourgos_buffer_memory import RuntimeShortTermMemory
+from autourgos_agent import Agent
+from autourgos_openaichat import OpenAIChatModel
+
+my_llm = OpenAIChatModel(model="gpt-4o-mini")
+memory = RuntimeShortTermMemory(max_messages=20)
+agent  = Agent(llm=my_llm, memory=memory)
+
+agent.invoke("My name is Jitin")
+agent.invoke("What is my name?")
+# → "Your name is Jitin."
+```
+
+---
+
+## Features
+
+- **`RuntimeShortTermMemory`** — keeps the last N messages in RAM, oldest dropped when the cap is exceeded
+- **`ConversationBufferMemory`** — same shape, no truncation, keeps every message for the session
+- Implements `autourgos_memory.BaseMemory` — drop-in for `Agent(memory=...)`
+- Zero I/O, fastest option in the memory family
+
+---
+
+## Table of Contents
+
+- [Install](#install)
+- [Classes](#classes)
+- [Parameters](#parameters)
+- [API](#api)
+- [License](#license)
 
 ---
 
@@ -13,10 +53,6 @@ pip install autourgos-buffer-memory
 ```
 
 ---
-
-## Quick Start
-
-`my_llm` below is any chat-model instance, e.g. `OpenAIChatModel` from `autourgos-openaichat` (`pip install autourgos-openaichat`, needs `OPENAI_API_KEY` set).
 
 ## Classes
 
@@ -46,10 +82,11 @@ Same as `RuntimeShortTermMemory` but with no truncation — keeps every message 
 from autourgos_buffer_memory import ConversationBufferMemory
 
 memory = ConversationBufferMemory()
-agent  = Agent(llm=my_llm, memory=memory)  # my_llm as shown in Quick Start above
+agent  = Agent(llm=my_llm, memory=memory)
 ```
 
-> For long conversations, use `autourgos-summary-memory` or `autourgos-token-memory` to stay within context window limits.
+> For long conversations, use `autourgos-summary-memory` or `autourgos-token-memory` to stay within context
+> window limits.
 
 ---
 
@@ -85,14 +122,6 @@ memory.clear()
 
 ---
 
-## Links
-
-- PyPI: https://pypi.org/project/autourgos-buffer-memory/
-- GitHub: https://github.com/devxjitin/autourgos-buffer-memory
-- Issues: https://github.com/devxjitin/autourgos-buffer-memory/issues
-
----
-
 ## License
 
-MIT — see [LICENSE](LICENSE)
+Apache License 2.0, Copyright (c) 2026 Jitin Kumar Sengar
