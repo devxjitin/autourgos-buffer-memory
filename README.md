@@ -7,9 +7,9 @@
 [![Contributor](https://img.shields.io/badge/Contributor-Sonia-blueviolet.svg)]()
 [![Contributor](https://img.shields.io/badge/Contributor-Vishwanil%20Suman-blueviolet.svg)]()
 
-In-memory short-term buffer for [Autourgos](https://github.com/devxjitin) agents. Two classes — a
-message-count bounded ring buffer and an unbounded conversation buffer. Fast, zero I/O, ideal for
-single-session use.
+In-memory short-term buffer for [Autourgos](https://github.com/devxjitin) agents. Three classes — a
+message-count bounded ring buffer, an unbounded conversation buffer, and a TTL-expiring buffer.
+Fast, zero I/O, ideal for single-session use.
 
 ```python
 from autourgos_buffer_memory import RuntimeShortTermMemory
@@ -31,6 +31,8 @@ agent.invoke("What is my name?")
 
 - **`RuntimeShortTermMemory`** — keeps the last N messages in RAM, oldest dropped when the cap is exceeded
 - **`ConversationBufferMemory`** — same shape, no truncation, keeps every message for the session
+- **`ExpiringBufferMemory`** — messages carry a time-to-live and are purged once expired; for a
+  long-running/background agent's temporary, run-scoped facts that shouldn't outlive the run
 - Implements `autourgos_memory.BaseMemory` — drop-in for `Agent(memory=...)`
 - Zero I/O, fastest option in the memory family
 
@@ -88,6 +90,27 @@ agent  = Agent(llm=my_llm, memory=memory)
 > For long conversations, use `autourgos-summary-memory` or `autourgos-token-memory` to stay within context
 > window limits.
 
+### ExpiringBufferMemory
+
+Each message carries a time-to-live; expired messages are purged automatically (lazily, on the
+next add/read — no background thread) and never appear in `get_messages()`/`format_for_llm()`.
+Meant for a long-running or background agent's temporary, run-scoped facts — worth remembering
+for the next few minutes or hours of a task, but that shouldn't silently persist the way an
+unbounded buffer would.
+
+```python
+from autourgos_buffer_memory import ExpiringBufferMemory
+
+memory = ExpiringBufferMemory(default_ttl_seconds=3600)  # 1 hour default
+agent  = Agent(llm=my_llm, memory=memory)
+
+memory.add_user_message("Skip the venv folder for this run.")          # expires in 1 hour
+memory.add_user_message("The deploy target is us-east-1.", ttl_seconds=None)  # never expires
+```
+
+Pass `ttl_seconds=` to any `add_*_message()` call to override `default_ttl_seconds` for that one
+message; `ttl_seconds=None` (explicit) makes that message permanent even with a default TTL set.
+
 ---
 
 ## Parameters
@@ -104,6 +127,14 @@ agent  = Agent(llm=my_llm, memory=memory)
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `name` | str | `"conversation"` | Human-readable identifier. |
+
+### ExpiringBufferMemory
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `default_ttl_seconds` | float, optional | `None` | Applied when a message doesn't pass its own `ttl_seconds`. `None` = messages never expire unless given a per-call TTL. |
+| `max_messages` | int, optional | `None` | Ring-buffer cap on *live* (non-expired) messages. `None` = unbounded. |
+| `name` | str | `"expiring"` | Human-readable identifier. |
 
 ---
 

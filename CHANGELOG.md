@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.0] - 2026-08-31
+
+- Added: `ExpiringBufferMemory` — a `BaseMemory` implementation where each message carries a
+  time-to-live (`default_ttl_seconds` at construction, or a per-call `ttl_seconds` override).
+  Expired messages are purged lazily on the next add/read and never appear in
+  `get_messages()`/`format_for_llm()`. For a long-running/background agent's temporary,
+  run-scoped facts that shouldn't silently persist into a later, unrelated run.
+
 ## [2.0.1] - 2026-07-27
 
 - Added: module logger. Docs: added explicit Quick Start heading and fixed the undefined my_llm placeholder.

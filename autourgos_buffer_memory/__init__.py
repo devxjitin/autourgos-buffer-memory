@@ -1,11 +1,11 @@
 """
 autourgos-buffer-memory — In-memory short-term buffers for Autourgos agents.
 
-    from autourgos_buffer_memory import RuntimeShortTermMemory, ConversationBufferMemory
+    from autourgos_buffer_memory import RuntimeShortTermMemory, ConversationBufferMemory, ExpiringBufferMemory
 """
 import logging
 
-from .memory import RuntimeShortTermMemory, ConversationBufferMemory
+from .memory import RuntimeShortTermMemory, ConversationBufferMemory, ExpiringBufferMemory
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +14,6 @@ try:
     __version__ = _v("autourgos-buffer-memory")
 except Exception:
     logger.debug("could not resolve installed version for autourgos-buffer-memory", exc_info=True)
-    __version__ = "2.0.2"
+    __version__ = "2.1.0"
 
-__all__ = ["RuntimeShortTermMemory", "ConversationBufferMemory"]
+__all__ = ["RuntimeShortTermMemory", "ConversationBufferMemory", "ExpiringBufferMemory"]
