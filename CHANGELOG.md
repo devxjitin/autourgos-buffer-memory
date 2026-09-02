@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.1] - 2026-09-01
+
+- Metadata: added `maintainers` (Sonia, Vishwanil Suman) to `pyproject.toml`,
+  and linked the README's existing Sonia contributor badge to her GitHub
+  profile (https://github.com/dahiyasonia). No code changes.
+
 ## [2.1.0] - 2026-08-31
 
 - Added: `ExpiringBufferMemory` — a `BaseMemory` implementation where each message carries a

@@ -14,6 +14,6 @@ try:
     __version__ = _v("autourgos-buffer-memory")
 except Exception:
     logger.debug("could not resolve installed version for autourgos-buffer-memory", exc_info=True)
-    __version__ = "2.1.0"
+    __version__ = "2.1.1"
 
 __all__ = ["RuntimeShortTermMemory", "ConversationBufferMemory", "ExpiringBufferMemory"]

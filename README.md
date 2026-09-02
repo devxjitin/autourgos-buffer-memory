@@ -4,7 +4,7 @@
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://pypi.org/project/autourgos-buffer-memory/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-green.svg)](https://github.com/devxjitin/autourgos-buffer-memory/blob/main/LICENSE)
 [![Author](https://img.shields.io/badge/Author-Jitin%20Kumar%20Sengar-blue.svg)](https://github.com/devxjitin)
-[![Contributor](https://img.shields.io/badge/Contributor-Sonia-blueviolet.svg)]()
+[![Contributor](https://img.shields.io/badge/Contributor-Sonia-blueviolet.svg)](https://github.com/dahiyasonia)
 [![Contributor](https://img.shields.io/badge/Contributor-Vishwanil%20Suman-blueviolet.svg)]()
 
 In-memory short-term buffer for [Autourgos](https://github.com/devxjitin) agents. Three classes — a
