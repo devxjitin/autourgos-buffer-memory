@@ -9,11 +9,8 @@ from .memory import RuntimeShortTermMemory, ConversationBufferMemory, ExpiringBu
 
 logger = logging.getLogger(__name__)
 
-try:
-    from importlib.metadata import version as _v
-    __version__ = _v("autourgos-buffer-memory")
-except Exception:
-    logger.debug("could not resolve installed version for autourgos-buffer-memory", exc_info=True)
-    __version__ = "2.1.2"
+from autourgos_core import package_version
+
+__version__ = package_version("autourgos-buffer-memory", fallback="2.1.3", logger=logger)
 
 __all__ = ["RuntimeShortTermMemory", "ConversationBufferMemory", "ExpiringBufferMemory"]
