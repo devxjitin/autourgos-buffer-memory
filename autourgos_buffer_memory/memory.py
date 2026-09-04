@@ -7,7 +7,7 @@ import threading
 from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional, Tuple
 
-from .base import BaseMemory, MemoryMessage
+from .base import BaseMemory, MemoryMessage, ROLE_TO_OPENAI, format_conversation_banner
 
 
 class RuntimeShortTermMemory(BaseMemory):
@@ -35,30 +35,14 @@ class RuntimeShortTermMemory(BaseMemory):
             self._messages = self._messages[-self.max_messages:]
         return msg
 
-    def add_user_message(self, content: str) -> MemoryMessage:
-        return self.add_message("user", content)
-
-    def add_agent_message(self, content: str) -> MemoryMessage:
-        return self.add_message("agent", content)
-
-    def add_system_message(self, content: str) -> MemoryMessage:
-        return self.add_message("system", content)
-
-    def add_tool_message(self, tool_name: str, result: str) -> MemoryMessage:
-        return self.add_message("tool", f"[{tool_name} returned]: {result}")
-
     def get_messages(self) -> List[Dict[str, str]]:
-        _ROLE = {"user": "user", "agent": "assistant", "system": "system", "tool": "tool"}
-        return [{"role": _ROLE.get(m.role, m.role), "content": m.content} for m in self._messages]
+        return [{"role": ROLE_TO_OPENAI.get(m.role, m.role), "content": m.content} for m in self._messages]
 
     def clear(self) -> None:
         self._messages = []
 
     def format_for_llm(self, query: Optional[str] = None) -> str:
-        if not self._messages:
-            return ""
-        lines = "\n".join(f"{m.role}: {m.content}" for m in self._messages)
-        return f"\n--- Previous Conversation Context ---\n{lines}\n--------------------------------------\n"
+        return format_conversation_banner(self._messages, include_timestamps=False)
 
 
 class ConversationBufferMemory(RuntimeShortTermMemory):
@@ -152,8 +136,7 @@ class ExpiringBufferMemory(BaseMemory):
     def get_messages(self) -> List[Dict[str, str]]:
         with self._lock:
             self._purge_expired()
-            _ROLE = {"user": "user", "agent": "assistant", "system": "system", "tool": "tool"}
-            return [{"role": _ROLE.get(m.role, m.role), "content": m.content} for m, _ in self._entries]
+            return [{"role": ROLE_TO_OPENAI.get(m.role, m.role), "content": m.content} for m, _ in self._entries]
 
     def clear(self) -> None:
         with self._lock:
@@ -162,7 +145,4 @@ class ExpiringBufferMemory(BaseMemory):
     def format_for_llm(self, query: Optional[str] = None) -> str:
         with self._lock:
             self._purge_expired()
-            if not self._entries:
-                return ""
-            lines = "\n".join(f"{m.role}: {m.content}" for m, _ in self._entries)
-            return f"\n--- Previous Conversation Context ---\n{lines}\n--------------------------------------\n"
+            return format_conversation_banner([m for m, _ in self._entries], include_timestamps=False)

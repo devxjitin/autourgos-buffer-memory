@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.2.0] - 2026-09-05
+
+- Internal: `RuntimeShortTermMemory`/`ExpiringBufferMemory` now use `autourgos-memory`'s shared `add_message`-based defaults (removed duplicated `add_user_message`/`add_agent_message`/`add_system_message`/`add_tool_message` one-liners) and `format_conversation_banner()`/`ROLE_TO_OPENAI` (removed duplicated banner-building and role-mapping dict). Requires `autourgos-memory>=1.2.0`. No functional/output change.
+
 ## [2.1.3] - 2026-09-04
 
 - Internal: `__version__` resolution moved to `autourgos_core.package_version()` (new `autourgos-core>=0.3.0` dependency). No functional change.
